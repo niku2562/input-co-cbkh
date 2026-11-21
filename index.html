@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Laporan Input CO - CBKH</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f3f4f6; color: #1f2937; margin: 0; padding: 14px; }
+    .container { max-width: 600px; margin: 0 auto; background: #ffffff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); }
+    h2 { margin: 0 0 6px 0; font-size: 19px; color: #111827; }
+    p.subtitle { margin: 0 0 18px 0; font-size: 13px; color: #6b7280; border-bottom: 1px solid #e5e7eb; padding-bottom: 12px; }
+    .section-title { font-size: 13px; font-weight: 700; color: #111827; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .form-group { margin-bottom: 12px; }
+    .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 4px; color: #374151; }
+    label span.req { color: #dc2626; }
+    input, select { width: 100%; padding: 9px 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 13px; box-sizing: border-box; font-family: inherit; }
+    input:focus, select:focus { outline: none; border-color: #111827; }
+    .manual-input { margin-top: 6px; display: none; background: #fffbeb; border-color: #f59e0b; }
+    .item-card { background: #f9fafb; border: 1px solid #e5e7eb; padding: 14px; border-radius: 8px; margin-bottom: 14px; }
+    .item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px dashed #d1d5db; font-size: 14px; font-weight: 700; color: #111827; }
+    .card-actions { display: flex; gap: 6px; }
+    .btn-duplikat { background: #e0e7ff; color: #1d4ed8; border: none; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; }
+    .btn-hapus { background: #fee2e2; color: #dc2626; border: none; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; }
+    .btn-tambah { width: 100%; background: #f3f4f6; color: #111827; border: 1px dashed #9ca3af; padding: 11px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; margin-bottom: 16px; }
+    .btn-submit { width: 100%; background: #111827; color: #ffffff; border: none; padding: 13px; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; }
+    .btn-submit:disabled { background: #9ca3af; cursor: not-allowed; }
+    #status { margin-top: 14px; text-align: center; font-size: 13px; font-weight: 600; }
+    @media (max-width: 480px) { .row-2 { grid-template-columns: 1fr; gap: 0; } }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Laporan Input CO - CBKH</h2>
+  <p class="subtitle">Isi data diri satu kali, lalu tambahkan semua pesanan Anda di bawah.</p>
+  
+  <div class="section-title">1. Data Member</div>
+  <div class="form-group">
+    <label>Nama Asli / Nama DANA <span class="req">*</span></label>
+    <input type="text" id="namaAsli" placeholder="Nama jangan diganti-ganti" required>
+  </div>
+  
+  <div class="form-group">
+    <label>Nomor DANA <span class="req">*</span></label>
+    <input type="tel" id="noDana" placeholder="Fee di bawah 10k wajib DANA (Contoh: 0812...)" required>
+  </div>
+
+  <div class="section-title" style="margin-top: 20px;">2. Daftar Pesanan</div>
+  <div id="items-container"></div>
+
+  <button type="button" class="btn-tambah" id="btnTambah">+ Tambah Pesanan Baru (Kosong)</button>
+  <button type="button" class="btn-submit" id="btnSubmit">Kirim Semua Data CO</button>
+  <div id="status"></div>
+</div>
+
+<template id="card-template">
+  <div class="item-card">
+    <div class="item-header">
+      <span class="card-title">Pesanan #1</span>
+      <div class="card-actions">
+        <button type="button" class="btn-duplikat">Duplikat</button>
+        <button type="button" class="btn-hapus">Hapus</button>
+      </div>
+    </div>
+
+    <div class="row-2">
+      <div class="form-group">
+        <label>APK yang Digunakan CO <span class="req">*</span></label>
+        <select class="apk">
+          <option value="LAZADA">LAZADA</option>
+          <option value="TIKTOK">TIKTOK</option>
+          <option value="TOKOPEDIA">TOKOPEDIA</option>
+          <option value="SHOPEE">SHOPEE</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Nama Penerima (di APK) <span class="req">*</span></label>
+        <input type="text" class="namaPenerima" placeholder="Nama akun/penerima" required>
+      </div>
+    </div>
+
+    <div class="row-2">
+      <div class="form-group">
+        <label>Nama Produk / Varian <span class="req">*</span></label>
+        <select class="produkSelect"></select>
+        <input type="text" class="produkManual manual-input" placeholder="Ketik nama produk manual...">
+      </div>
+      <div class="form-group">
+        <label>Jumlah / Quantity CO <span class="req">*</span></label>
+        <input type="number" class="qty" value="1" min="1" required>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Alamat Pesanan <span class="req">*</span></label>
+      <select class="alamatSelect"></select>
+      <input type="text" class="alamatManual manual-input" placeholder="Ketik alamat pesanan manual...">
+    </div>
+
+    <div class="row-2">
+      <div class="form-group">
+        <label>Harga Didapat Saat CO <span class="req">*</span></label>
+        <input type="number" class="hargaCo" placeholder="Angka saja, cth: 278152" required>
+      </div>
+      <div class="form-group">
+        <label>Harga Max (Patokan Admin)</label>
+        <input type="number" class="hargaMax" placeholder="Angka saja, cth: 279000">
+      </div>
+    </div>
+
+    <div class="row-2">
+      <div class="form-group">
+        <label>Nomer ID Pesanan <span class="req">*</span></label>
+        <input type="text" class="noPesanan" placeholder="Tempel ID pesanan" required>
+      </div>
+      <div class="form-group">
+        <label>Nomer Resi Pesanan</label>
+        <input type="text" class="noResi" placeholder="Isi jika sudah keluar resi">
+      </div>
+    </div>
+
+    <div class="row-2">
+      <div class="form-group">
+        <label>Keterangan Pengiriman <span class="req">*</span></label>
+        <select class="ketPengiriman">
+          <option value="BARANG DITERIMA">BARANG DITERIMA</option>
+          <option value="DALAM PENGIRIMAN">DALAM PENGIRIMAN</option>
+          <option value="DIKEMAS">DIKEMAS</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Nama Kurir</label>
+        <input type="text" class="namaKurir" placeholder="Wajib diisi jika ada">
+      </div>
+    </div>
+
+    <div class="row-2">
+      <div class="form-group">
+        <label>Tanggal Order <span class="req">*</span></label>
+        <input type="date" class="tglOrder" required>
+      </div>
+      <div class="form-group">
+        <label>Tanggal Diterima</label>
+        <input type="date" class="tglDiterima">
+      </div>
+    </div>
+
+    <div class="form-group" style="margin-bottom:0;">
+      <label>Screenshot Pesanan (Kelihatan alamat, nopes, resi, harga COD) <span class="req">*</span></label>
+      <input type="file" class="ssFile" accept="image/*" required>
+    </div>
+  </div>
+</template>
+
+<script>
+  const API_URL = 'https://script.googleusercontent.com/macros/echo?user_content_key=AUkAhnTpPUp5yCLy8uhPvFVfyIpwdaynHc3-kFMOpCxlNWpodDlYxy4QQkOC0XXk8mnCvFGmBaOpZmHSMJ3GikjZLhR3R6AEZmUsm7ypYKCS9q4eSBNSho3QI8CVE6kPiKYPaAr8VthNGruJyj6jONp35aU2pgvlTsViGcenKVs1yH3GRh9wlimFQpXSSgEhNUPEPQmxspmvEjSGXgXAACX_7Nb6Ah6q2caS3qAc0Y-D0YfgBde_NjNIhDPZOf-GFaEvkzlQmQV9EAvNAIz69OhaAJ4wUSWf0g&lib=MVr3uASx5QnOrTURPz2YqiDWsddqWgm_m';
+  let masterData = { produk: [], alamat: [] };
+
+  function isiOpsiDropdown(selectEl, daftarOpsi, labelKosong) {
+    selectEl.innerHTML = '';
+    const optDefault = document.createElement('option');
+    optDefault.value = '';
+    optDefault.text = daftarOpsi.length > 0 ? '-- Pilih ' + labelKosong + ' --' : 'Memuat daftar...';
+    selectEl.appendChild(optDefault);
+
+    for (let i = 0; i < daftarOpsi.length; i++) {
+      const opt = document.createElement('option');
+      opt.value = daftarOpsi[i];
+      opt.text = daftarOpsi[i];
+      selectEl.appendChild(opt);
+    }
+
+    const optManual = document.createElement('option');
+    optManual.value = '__MANUAL__';
+    optManual.text = '+ Ketik Manual (Lainnya)';
+    selectEl.appendChild(optManual);
+  }
+
+  function tambahBaris(dataSalinan) {
+    const container = document.getElementById('items-container');
+    const template = document.getElementById('card-template');
+    const clone = template.content.cloneNode(true);
+    const card = clone.querySelector('.item-card');
+
+    const produkSelect = card.querySelector('.produkSelect');
+    const produkManual = card.querySelector('.produkManual');
+    const alamatSelect = card.querySelector('.alamatSelect');
+    const alamatManual = card.querySelector('.alamatManual');
+
+    isiOpsiDropdown(produkSelect, masterData.produk, 'Produk / Varian');
+    isiOpsiDropdown(alamatSelect, masterData.alamat, 'Alamat');
+
+    produkSelect.addEventListener('change', function() {
+      produkManual.style.display = (this.value === '__MANUAL__') ? 'block' : 'none';
+    });
+
+    alamatSelect.addEventListener('change', function() {
+      alamatManual.style.display = (this.value === '__MANUAL__') ? 'block' : 'none';
+    });
+
+    if (dataSalinan) {
+      card.querySelector('.apk').value = dataSalinan.apk;
+      card.querySelector('.namaPenerima').value = dataSalinan.namaPenerima;
+      produkSelect.value = dataSalinan.produkSelectVal;
+      if (dataSalinan.produkSelectVal === '__MANUAL__') {
+        produkManual.style.display = 'block';
+        produkManual.value = dataSalinan.produkManualVal;
+      }
+      card.querySelector('.qty').value = dataSalinan.qty;
+      alamatSelect.value = dataSalinan.alamatSelectVal;
+      if (dataSalinan.alamatSelectVal === '__MANUAL__') {
+        alamatManual.style.display = 'block';
+        alamatManual.value = dataSalinan.alamatManualVal;
+      }
+      card.querySelector('.hargaCo').value = dataSalinan.hargaCo;
+      card.querySelector('.hargaMax').value = dataSalinan.hargaMax;
+      card.querySelector('.ketPengiriman').value = dataSalinan.ketPengiriman;
+      card.querySelector('.namaKurir').value = dataSalinan.namaKurir;
+      card.querySelector('.tglOrder').value = dataSalinan.tglOrder;
+      card.querySelector('.tglDiterima').value = dataSalinan.tglDiterima;
+    }
+
+    card.querySelector('.btn-duplikat').addEventListener('click', function() {
+      tambahBaris({
+        apk: card.querySelector('.apk').value,
+        namaPenerima: card.querySelector('.namaPenerima').value,
+        produkSelectVal: produkSelect.value,
+        produkManualVal: produkManual.value,
+        qty: card.querySelector('.qty').value,
+        alamatSelectVal: alamatSelect.value,
+        alamatManualVal: alamatManual.value,
+        hargaCo: card.querySelector('.hargaCo').value,
+        hargaMax: card.querySelector('.hargaMax').value,
+        ketPengiriman: card.querySelector('.ketPengiriman').value,
+        namaKurir: card.querySelector('.namaKurir').value,
+        tglOrder: card.querySelector('.tglOrder').value,
+        tglDiterima: card.querySelector('.tglDiterima').value
+      });
+    });
+
+    card.querySelector('.btn-hapus').addEventListener('click', function() {
+      card.remove();
+      perbaruiNomorKartu();
+    });
+
+    container.appendChild(card);
+    perbaruiNomorKartu();
+  }
+
+  function perbaruiNomorKartu() {
+    const cards = document.querySelectorAll('.item-card');
+    for (let i = 0; i < cards.length; i++) {
+      cards[i].querySelector('.card-title').innerText = 'Pesanan #' + (i + 1);
+      cards[i].querySelector('.btn-hapus').style.display = (cards.length > 1) ? 'inline-block' : 'none';
+    }
+  }
+
+  function bacaFile(file) {
+    return new Promise((resolve, reject) => {
+      if (!file) return resolve({ fileData: null, fileName: null });
+      const reader = new FileReader();
+      reader.onload = () => resolve({ fileData: reader.result, fileName: file.name });
+      reader.onerror = error => reject(error);
+      reader.readAsDataURL(file);
+    });
+  }
+
+  async function prosesKirim() {
+    const namaAsli = document.getElementById('namaAsli').value.trim();
+    const noDana = document.getElementById('noDana').value.trim();
+    const cards = document.querySelectorAll('.item-card');
+    const statusDiv = document.getElementById('status');
+    const btn = document.getElementById('btnSubmit');
+
+    if (!namaAsli || !noDana) {
+      alert('Harap isi Nama Asli dan Nomor DANA terlebih dahulu.');
+      return;
+    }
+
+    btn.disabled = true;
+    btn.innerText = 'Memproses gambar & data...';
+    statusDiv.innerText = '';
+
+    try {
+      const items = [];
+      for (let i = 0; i < cards.length; i++) {
+        const card = cards[i];
+        const apk = card.querySelector('.apk').value;
+        const namaPenerima = card.querySelector('.namaPenerima').value.trim();
+        const produkSel = card.querySelector('.produkSelect').value;
+        const namaProduk = (produkSel === '__MANUAL__') ? card.querySelector('.produkManual').value.trim() : produkSel;
+        const qty = card.querySelector('.qty').value.trim();
+        const alamatSel = card.querySelector('.alamatSelect').value;
+        const alamat = (alamatSel === '__MANUAL__') ? card.querySelector('.alamatManual').value.trim() : alamatSel;
+        const hargaCo = card.querySelector('.hargaCo').value.trim();
+        const hargaMax = card.querySelector('.hargaMax').value.trim();
+        const noPesanan = card.querySelector('.noPesanan').value.trim();
+        const noResi = card.querySelector('.noResi').value.trim();
+        const ketPengiriman = card.querySelector('.ketPengiriman').value;
+        const namaKurir = card.querySelector('.namaKurir').value.trim();
+        const tglOrder = card.querySelector('.tglOrder').value;
+        const tglDiterima = card.querySelector('.tglDiterima').value;
+        const fileInput = card.querySelector('.ssFile');
+
+        if (!namaPenerima || !namaProduk || !qty || !alamat || !hargaCo || !noPesanan || !tglOrder || !fileInput.files[0]) {
+          alert('Harap lengkapi semua kolom wajib (*) dan upload screenshot pada Pesanan #' + (i + 1) + '.');
+          btn.disabled = false;
+          btn.innerText = 'Kirim Semua Data CO';
+          return;
+        }
+
+        const fileObj = await bacaFile(fileInput.files[0]);
+        items.push({
+          apk, namaPenerima, namaProduk, qty, alamat,
+          hargaCo, hargaMax, noPesanan, noResi,
+          ketPengiriman, namaKurir, tglOrder, tglDiterima,
+          fileData: fileObj.fileData,
+          fileName: fileObj.fileName
+        });
+      }
+
+      btn.innerText = 'Menyimpan ke Spreadsheet...';
+      const response = await fetch(API_URL, {
+        method: 'POST',
+        body: JSON.stringify({ namaAsli, noDana, items })
+      });
+      const res = await response.json();
+
+      if (res.status === 'sukses') {
+        statusDiv.style.color = '#16a34a';
+        statusDiv.innerText = 'Berhasil! ' + res.jumlah + ' pesanan telah masuk ke sheet november 2026.';
+        document.getElementById('items-container').innerHTML = '';
+        tambahBaris();
+      } else {
+        statusDiv.style.color = '#dc2626';
+        statusDiv.innerText = 'Gagal: ' + res.pesan;
+      }
+    } catch (e) {
+      statusDiv.style.color = '#dc2626';
+      statusDiv.innerText = 'Koneksi gagal: ' + e;
+    } finally {
+      btn.disabled = false;
+      btn.innerText = 'Kirim Semua Data CO';
+    }
+  }
+
+  document.getElementById('btnTambah').addEventListener('click', () => tambahBaris());
+  document.getElementById('btnSubmit').addEventListener('click', () => prosesKirim());
+
+  tambahBaris();
+  fetch(API_URL)
+    .then(r => r.json())
+    .then(data => {
+      masterData = data;
+      document.querySelectorAll('.item-card').forEach(card => {
+        isiOpsiDropdown(card.querySelector('.produkSelect'), masterData.produk, 'Produk / Varian');
+        isiOpsiDropdown(card.querySelector('.alamatSelect'), masterData.alamat, 'Alamat');
+      });
+    });
+</script>
+
+</body>
+</html>
