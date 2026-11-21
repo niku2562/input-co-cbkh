@@ -7,8 +7,12 @@
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f3f4f6; color: #1f2937; margin: 0; padding: 14px; }
     .container { max-width: 600px; margin: 0 auto; background: #ffffff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); }
+    .login-box { max-width: 380px; margin: 40px auto; background: #ffffff; padding: 24px; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
     h2 { margin: 0 0 6px 0; font-size: 19px; color: #111827; }
     p.subtitle { margin: 0 0 18px 0; font-size: 13px; color: #6b7280; border-bottom: 1px solid #e5e7eb; padding-bottom: 12px; }
+    .top-bar { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid #e5e7eb; padding-bottom: 12px; margin-bottom: 18px; }
+    .top-bar p { margin: 4px 0 0 0; font-size: 13px; color: #6b7280; }
+    .btn-logout { background: #fee2e2; color: #dc2626; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; }
     .section-title { font-size: 13px; font-weight: 700; color: #111827; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
     .form-group { margin-bottom: 12px; }
     .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
@@ -16,6 +20,7 @@
     label span.req { color: #dc2626; }
     input, select { width: 100%; padding: 9px 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 13px; box-sizing: border-box; font-family: inherit; }
     input:focus, select:focus { outline: none; border-color: #111827; }
+    input[readonly] { background: #f3f4f6; color: #4b5563; font-weight: 600; cursor: not-allowed; }
     .manual-input { margin-top: 6px; display: none; background: #fffbeb; border-color: #f59e0b; }
     .item-card { background: #f9fafb; border: 1px solid #e5e7eb; padding: 14px; border-radius: 8px; margin-bottom: 14px; }
     .item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px dashed #d1d5db; font-size: 14px; font-weight: 700; color: #111827; }
@@ -25,28 +30,54 @@
     .btn-tambah { width: 100%; background: #f3f4f6; color: #111827; border: 1px dashed #9ca3af; padding: 11px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; margin-bottom: 16px; }
     .btn-submit { width: 100%; background: #111827; color: #ffffff; border: none; padding: 13px; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; }
     .btn-submit:disabled { background: #9ca3af; cursor: not-allowed; }
-    #status { margin-top: 14px; text-align: center; font-size: 13px; font-weight: 600; }
+    #status, #loginStatus { margin-top: 12px; text-align: center; font-size: 13px; font-weight: 600; }
     @media (max-width: 480px) { .row-2 { grid-template-columns: 1fr; gap: 0; } }
   </style>
 </head>
 <body>
 
-<div class="container">
-  <h2>Laporan Input CO - CBKH</h2>
-  <p class="subtitle">Isi data diri satu kali, lalu tambahkan semua pesanan Anda di bawah.</p>
+<!-- HALAMAN LOGIN MEMBER -->
+<div class="login-box" id="login-screen">
+  <h2>Login Member CBKH</h2>
+  <p class="subtitle">Masukkan Username dan Password resmi Anda untuk mengakses formulir CO.</p>
   
-  <div class="section-title">1. Data Member</div>
   <div class="form-group">
-    <label>Nama Asli / Nama DANA <span class="req">*</span></label>
-    <input type="text" id="namaAsli" placeholder="Nama jangan diganti-ganti" required>
+    <label>Username <span class="req">*</span></label>
+    <input type="text" id="loginUser" placeholder="Masukkan username..." autocomplete="username">
   </div>
   
   <div class="form-group">
-    <label>Nomor DANA <span class="req">*</span></label>
-    <input type="tel" id="noDana" placeholder="Fee di bawah 10k wajib DANA (Contoh: 0812...)" required>
+    <label>Password <span class="req">*</span></label>
+    <input type="password" id="loginPass" placeholder="Masukkan password..." autocomplete="current-password">
   </div>
 
-  <div class="section-title" style="margin-top: 20px;">2. Daftar Pesanan</div>
+  <button type="button" class="btn-submit" id="btnLogin">Masuk</button>
+  <div id="loginStatus"></div>
+</div>
+
+<!-- HALAMAN FORMULIR UTAMA (TERSEMBUNYI SEBELUM LOGIN) -->
+<div class="container" id="form-screen" style="display:none;">
+  <div class="top-bar">
+    <div>
+      <h2>Laporan Input CO - CBKH</h2>
+      <p>Identitas otomatis terkunci sesuai akun member.</p>
+    </div>
+    <button type="button" class="btn-logout" id="btnLogout">Keluar</button>
+  </div>
+  
+  <div class="section-title">1. Data Member</div>
+  <div class="row-2">
+    <div class="form-group">
+      <label>Nama Asli / Nama DANA</label>
+      <input type="text" id="namaAsli" readonly>
+    </div>
+    <div class="form-group">
+      <label>Nomor DANA</label>
+      <input type="tel" id="noDana" readonly>
+    </div>
+  </div>
+
+  <div class="section-title" style="margin-top: 16px;">2. Daftar Pesanan</div>
   <div id="items-container"></div>
 
   <button type="button" class="btn-tambah" id="btnTambah">+ Tambah Pesanan Baru (Kosong)</button>
@@ -155,7 +186,8 @@
 
 <script>
   const API_URL = 'https://script.google.com/macros/s/AKfycbyU1gv_HDJYLYqrmq8zLpRN7aIik0dXA71im5n7xHsVC8zmBWAKEDf46wEwdAtX_Njx_Q/exec';
-  
+  let currentUser = { username: '', password: '' };
+
   let masterData = {
     produk: [
       "SWEETY VARIAN XL42", "SWEETY VARIAN L54", "SGM 1+ MADU", "SGM 1+ VANILA",
@@ -176,6 +208,73 @@
       "Wahyu Beringin", "MLATI SA"
     ]
   };
+
+  function bukaFormulir(user, pass, namaAsli, noDana) {
+    currentUser = { username: user, password: pass };
+    document.getElementById('namaAsli').value = namaAsli;
+    document.getElementById('noDana').value = noDana;
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('form-screen').style.display = 'block';
+    
+    if (document.querySelectorAll('.item-card').length === 0) {
+      tambahBaris();
+    }
+    muatMasterData();
+  }
+
+  async function prosesLogin() {
+    const user = document.getElementById('loginUser').value.trim();
+    const pass = document.getElementById('loginPass').value.trim();
+    const statusEl = document.getElementById('loginStatus');
+    const btn = document.getElementById('btnLogin');
+
+    if (!user || !pass) {
+      statusEl.style.color = '#dc2626';
+      statusEl.innerText = 'Isi Username dan Password terlebih dahulu.';
+      return;
+    }
+
+    btn.disabled = true;
+    btn.innerText = 'Memeriksa akun...';
+    statusEl.innerText = '';
+
+    try {
+      const response = await fetch(API_URL, {
+        method: 'POST',
+        redirect: 'follow',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'login', username: user, password: pass })
+      });
+      const res = await response.json();
+
+      if (res.status === 'sukses') {
+        localStorage.setItem('cbkh_auth', JSON.stringify({
+          username: user,
+          password: pass,
+          namaAsli: res.namaAsli,
+          noDana: res.noDana
+        }));
+        bukaFormulir(user, pass, res.namaAsli, res.noDana);
+      } else {
+        statusEl.style.color = '#dc2626';
+        statusEl.innerText = res.pesan;
+      }
+    } catch (e) {
+      statusEl.style.color = '#dc2626';
+      statusEl.innerText = 'Koneksi gagal: ' + e;
+    } finally {
+      btn.disabled = false;
+      btn.innerText = 'Masuk';
+    }
+  }
+
+  function logoutMember() {
+    localStorage.removeItem('cbkh_auth');
+    currentUser = { username: '', password: '' };
+    document.getElementById('loginPass').value = '';
+    document.getElementById('form-screen').style.display = 'none';
+    document.getElementById('login-screen').style.display = 'block';
+  }
 
   function isiOpsiDropdown(selectEl, daftarOpsi, labelKosong) {
     const nilaiSebelumnya = selectEl.value;
@@ -290,16 +389,9 @@
   }
 
   async function prosesKirim() {
-    const namaAsli = document.getElementById('namaAsli').value.trim();
-    const noDana = document.getElementById('noDana').value.trim();
     const cards = document.querySelectorAll('.item-card');
     const statusDiv = document.getElementById('status');
     const btn = document.getElementById('btnSubmit');
-
-    if (!namaAsli || !noDana) {
-      alert('Harap isi Nama Asli dan Nomor DANA terlebih dahulu.');
-      return;
-    }
 
     btn.disabled = true;
     btn.innerText = 'Memproses gambar & data...';
@@ -347,16 +439,19 @@
       const response = await fetch(API_URL, {
         method: 'POST',
         redirect: 'follow',
-        headers: {
-          'Content-Type': 'text/plain;charset=utf-8'
-        },
-        body: JSON.stringify({ namaAsli, noDana, items })
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+          action: 'submit',
+          username: currentUser.username,
+          password: currentUser.password,
+          items
+        })
       });
       const res = await response.json();
 
       if (res.status === 'sukses') {
         statusDiv.style.color = '#16a34a';
-        statusDiv.innerText = 'Berhasil! ' + res.jumlah + ' pesanan telah masuk ke sheet november 2026.';
+        statusDiv.innerText = 'Berhasil! ' + res.jumlah + ' pesanan telah masuk ke database.';
         document.getElementById('items-container').innerHTML = '';
         tambahBaris();
       } else {
@@ -372,24 +467,35 @@
     }
   }
 
+  function muatMasterData() {
+    fetch(API_URL, { redirect: 'follow' })
+      .then(r => r.json())
+      .then(data => {
+        if (data && data.produk && data.produk.length > 0) masterData.produk = data.produk;
+        if (data && data.alamat && data.alamat.length > 0) masterData.alamat = data.alamat;
+        document.querySelectorAll('.item-card').forEach(card => {
+          isiOpsiDropdown(card.querySelector('.produkSelect'), masterData.produk, 'Produk / Varian');
+          isiOpsiDropdown(card.querySelector('.alamatSelect'), masterData.alamat, 'Alamat');
+        });
+      })
+      .catch(() => {});
+  }
+
+  document.getElementById('btnLogin').addEventListener('click', prosesLogin);
+  document.getElementById('btnLogout').addEventListener('click', logoutMember);
   document.getElementById('btnTambah').addEventListener('click', () => tambahBaris());
-  document.getElementById('btnSubmit').addEventListener('click', () => prosesKirim());
+  document.getElementById('btnSubmit').addEventListener('click', prosesKirim);
 
-  // Langsung munculkan Pesanan #1 dengan daftar cadangan instan
-  tambahBaris();
-
-  // Sinkronisasi tambahan dari tab Master_Data di latar belakang
-  fetch(API_URL, { redirect: 'follow' })
-    .then(r => r.json())
-    .then(data => {
-      if (data && data.produk && data.produk.length > 0) masterData.produk = data.produk;
-      if (data && data.alamat && data.alamat.length > 0) masterData.alamat = data.alamat;
-      document.querySelectorAll('.item-card').forEach(card => {
-        isiOpsiDropdown(card.querySelector('.produkSelect'), masterData.produk, 'Produk / Varian');
-        isiOpsiDropdown(card.querySelector('.alamatSelect'), masterData.alamat, 'Alamat');
-      });
-    })
-    .catch(() => {});
+  // Cek apakah member pernah login sebelumnya di HP ini
+  const savedAuth = localStorage.getItem('cbkh_auth');
+  if (savedAuth) {
+    try {
+      const parsed = JSON.parse(savedAuth);
+      if (parsed.username && parsed.password) {
+        bukaFormulir(parsed.username, parsed.password, parsed.namaAsli, parsed.noDana);
+      }
+    } catch (e) {}
+  }
 </script>
 
 </body>
