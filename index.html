@@ -154,7 +154,7 @@
 </template>
 
 <script>
-  const API_URL = 'https://script.googleusercontent.com/macros/echo?user_content_key=AUkAhnTpPUp5yCLy8uhPvFVfyIpwdaynHc3-kFMOpCxlNWpodDlYxy4QQkOC0XXk8mnCvFGmBaOpZmHSMJ3GikjZLhR3R6AEZmUsm7ypYKCS9q4eSBNSho3QI8CVE6kPiKYPaAr8VthNGruJyj6jONp35aU2pgvlTsViGcenKVs1yH3GRh9wlimFQpXSSgEhNUPEPQmxspmvEjSGXgXAACX_7Nb6Ah6q2caS3qAc0Y-D0YfgBde_NjNIhDPZOf-GFaEvkzlQmQV9EAvNAIz69OhaAJ4wUSWf0g&lib=MVr3uASx5QnOrTURPz2YqiDWsddqWgm_m';
+  const API_URL = 'https://script.google.com/macros/s/AKfycbyU1gv_HDJYLYqrmq8zLpRN7aIik0dXA71im5n7xHsVC8zmBWAKEDf46wEwdAtX_Njx_Q/exec';
   let masterData = { produk: [], alamat: [] };
 
   function isiOpsiDropdown(selectEl, daftarOpsi, labelKosong) {
@@ -323,6 +323,10 @@
       btn.innerText = 'Menyimpan ke Spreadsheet...';
       const response = await fetch(API_URL, {
         method: 'POST',
+        redirect: 'follow',
+        headers: {
+          'Content-Type': 'text/plain;charset=utf-8'
+        },
         body: JSON.stringify({ namaAsli, noDana, items })
       });
       const res = await response.json();
@@ -349,7 +353,7 @@
   document.getElementById('btnSubmit').addEventListener('click', () => prosesKirim());
 
   tambahBaris();
-  fetch(API_URL)
+  fetch(API_URL, { redirect: 'follow' })
     .then(r => r.json())
     .then(data => {
       masterData = data;
