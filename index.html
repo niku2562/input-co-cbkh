@@ -155,13 +155,34 @@
 
 <script>
   const API_URL = 'https://script.google.com/macros/s/AKfycbyU1gv_HDJYLYqrmq8zLpRN7aIik0dXA71im5n7xHsVC8zmBWAKEDf46wEwdAtX_Njx_Q/exec';
-  let masterData = { produk: [], alamat: [] };
+  
+  let masterData = {
+    produk: [
+      "SWEETY VARIAN XL42", "SWEETY VARIAN L54", "SGM 1+ MADU", "SGM 1+ VANILA",
+      "Vidoran 1+ 900", "Merries XL38", "Merries L42", "Merries M48",
+      "Xiaomi Google TV A 32 2026", "4/64 Infinix Smart 20", "4/128 Infinix Smart 20",
+      "4/256 Infinix Smart 20", "6/128 Infinix Smart 20E", "4/128 Infinix Hot 70",
+      "6/128 Infinix Hot 70", "6/256 Infinix Hot 70", "8/128 Infinix Hot 70",
+      "6/128 Itel A300", "3/32 Itel A100c", "4/128 Poco C71", "4/128 Poco C81 Pro",
+      "6/128 Poco C95 Pro", "8/256 Poco C95 Pro", "4/64 Realme Note 80",
+      "4/128 Realme Note 80", "4/64 Realme P4 Lite", "4/128 Realme P4X",
+      "4/64 Samsung A07", "4/128 Samsung A07", "8/128 Samsung A17",
+      "4/64 Tecno Spark Go 3", "4/64 Vivo Y03t", "4/128 Vivo Y03t",
+      "4/64 Vivo Y19s Pro", "4/128 Vivo Y19s Pro"
+    ],
+    alamat: [
+      "Blok MA", "BLOK ASOKA", "BLOK OGI", "GADING KIRANA",
+      "Glodok City Cibinong Elektronik", "Duta suara elektronik",
+      "Wahyu Beringin", "MLATI SA"
+    ]
+  };
 
   function isiOpsiDropdown(selectEl, daftarOpsi, labelKosong) {
+    const nilaiSebelumnya = selectEl.value;
     selectEl.innerHTML = '';
     const optDefault = document.createElement('option');
     optDefault.value = '';
-    optDefault.text = daftarOpsi.length > 0 ? '-- Pilih ' + labelKosong + ' --' : 'Memuat daftar...';
+    optDefault.text = '-- Pilih ' + labelKosong + ' --';
     selectEl.appendChild(optDefault);
 
     for (let i = 0; i < daftarOpsi.length; i++) {
@@ -175,6 +196,8 @@
     optManual.value = '__MANUAL__';
     optManual.text = '+ Ketik Manual (Lainnya)';
     selectEl.appendChild(optManual);
+
+    if (nilaiSebelumnya) selectEl.value = nilaiSebelumnya;
   }
 
   function tambahBaris(dataSalinan) {
@@ -352,16 +375,21 @@
   document.getElementById('btnTambah').addEventListener('click', () => tambahBaris());
   document.getElementById('btnSubmit').addEventListener('click', () => prosesKirim());
 
+  // Langsung munculkan Pesanan #1 dengan daftar cadangan instan
   tambahBaris();
+
+  // Sinkronisasi tambahan dari tab Master_Data di latar belakang
   fetch(API_URL, { redirect: 'follow' })
     .then(r => r.json())
     .then(data => {
-      masterData = data;
+      if (data && data.produk && data.produk.length > 0) masterData.produk = data.produk;
+      if (data && data.alamat && data.alamat.length > 0) masterData.alamat = data.alamat;
       document.querySelectorAll('.item-card').forEach(card => {
         isiOpsiDropdown(card.querySelector('.produkSelect'), masterData.produk, 'Produk / Varian');
         isiOpsiDropdown(card.querySelector('.alamatSelect'), masterData.alamat, 'Alamat');
       });
-    });
+    })
+    .catch(() => {});
 </script>
 
 </body>
