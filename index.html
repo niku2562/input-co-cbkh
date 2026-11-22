@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Laporan Input CO - CBKH</title>
+  <title>Portal Member CBKH</title>
   <style>
     :root {
       --primary: #634A4A;
@@ -13,6 +13,8 @@
       --bg-page: #f7f4f4;
       --text-main: #2b2121;
       --text-muted: #786868;
+      --success: #15803d;
+      --warning: #b45309;
     }
 
     body {
@@ -20,15 +22,15 @@
       background: var(--bg-page);
       color: var(--text-main);
       margin: 0;
-      padding: 16px;
+      padding: 14px;
       line-height: 1.45;
     }
 
     .container {
-      max-width: 600px;
+      max-width: 720px;
       margin: 0 auto;
       background: #ffffff;
-      padding: 24px;
+      padding: 20px;
       border-radius: 14px;
       border-top: 4px solid var(--primary);
       box-shadow: 0 4px 20px rgba(99, 74, 74, 0.08);
@@ -44,35 +46,26 @@
       box-shadow: 0 6px 24px rgba(99, 74, 74, 0.1);
     }
 
-    h2 {
-      margin: 0 0 6px 0;
-      font-size: 20px;
-      font-weight: 700;
-      color: var(--primary);
-      letter-spacing: -0.2px;
-    }
-
-    p.subtitle {
-      margin: 0 0 20px 0;
-      font-size: 13px;
-      color: var(--text-muted);
-      border-bottom: 1px solid #ede7e7;
-      padding-bottom: 14px;
-    }
+    h2 { margin: 0 0 4px 0; font-size: 20px; font-weight: 700; color: var(--primary); }
+    p.subtitle { margin: 0 0 18px 0; font-size: 13px; color: var(--text-muted); border-bottom: 1px solid #ede7e7; padding-bottom: 12px; }
 
     .top-bar {
       display: flex;
       justify-content: space-between;
-      align-items: flex-start;
-      border-bottom: 1px solid #ede7e7;
-      padding-bottom: 14px;
-      margin-bottom: 20px;
+      align-items: center;
+      margin-bottom: 14px;
     }
 
-    .top-bar p {
-      margin: 4px 0 0 0;
-      font-size: 13px;
-      color: var(--text-muted);
+    .badge-role {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 99px;
+      background: var(--primary);
+      color: #fff;
+      vertical-align: middle;
+      margin-left: 6px;
     }
 
     .btn-logout {
@@ -84,50 +77,78 @@
       font-size: 12px;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.2s ease;
     }
 
-    .btn-logout:hover {
-      background: #ebe2e2;
+    /* NAVIGASI TAB */
+    .nav-tabs {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      margin-bottom: 18px;
+      border-bottom: 1px solid #ede7e7;
     }
 
+    .nav-btn {
+      background: var(--primary-soft);
+      color: var(--text-muted);
+      border: 1px solid transparent;
+      padding: 8px 13px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .nav-btn.active {
+      background: var(--primary);
+      color: #ffffff;
+    }
+
+    /* GRID RINGKASAN DASHBOARD */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .stat-card {
+      background: var(--primary-soft);
+      border: 1px solid var(--primary-border);
+      border-radius: 10px;
+      padding: 14px;
+    }
+
+    .stat-card.highlight {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+    }
+
+    .stat-label { font-size: 11px; opacity: 0.85; font-weight: 600; text-transform: uppercase; }
+    .stat-val { font-size: 18px; font-weight: 700; margin-top: 4px; }
+
+    /* FORM & INPUT */
     .section-title {
       font-size: 12px;
       font-weight: 700;
       color: var(--primary);
       margin-bottom: 12px;
       text-transform: uppercase;
-      letter-spacing: 0.7px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
+      letter-spacing: 0.6px;
     }
 
-    .form-group {
-      margin-bottom: 14px;
-    }
-
-    .row-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-
-    label {
-      display: block;
-      font-size: 12px;
-      font-weight: 600;
-      margin-bottom: 5px;
-      color: #4a3c3c;
-    }
-
-    label span.req {
-      color: #c53030;
-    }
+    .form-group { margin-bottom: 12px; }
+    .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 4px; color: #4a3c3c; }
+    label span.req { color: #c53030; }
 
     input, select {
       width: 100%;
-      padding: 10px 12px;
+      padding: 9px 11px;
       border: 1px solid var(--primary-border);
       border-radius: 8px;
       font-size: 13px;
@@ -135,7 +156,6 @@
       background: #ffffff;
       box-sizing: border-box;
       font-family: inherit;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
     }
 
     input:focus, select:focus {
@@ -147,57 +167,41 @@
     input[readonly] {
       background: var(--primary-soft);
       color: var(--primary);
-      border-color: #e3dada;
       font-weight: 600;
       cursor: not-allowed;
     }
 
-    .manual-input {
-      margin-top: 8px;
-      display: none;
-      background: #fdfaf7;
-      border-color: #b78d65;
-    }
+    .manual-input { margin-top: 8px; display: none; background: #fdfaf7; border-color: #b78d65; }
 
     .item-card {
       background: #fcfafa;
       border: 1px solid #e6dede;
-      padding: 16px;
+      padding: 14px;
       border-radius: 10px;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
     .item-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 14px;
-      padding-bottom: 10px;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
       border-bottom: 1px dashed var(--primary-border);
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 700;
       color: var(--primary);
     }
 
-    .card-actions {
-      display: flex;
-      gap: 6px;
-    }
-
-    .btn-duplikat {
+    .btn-duplikat, .btn-small {
       background: var(--primary-soft);
       color: var(--primary);
       border: 1px solid var(--primary-border);
       padding: 5px 10px;
       border-radius: 6px;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 600;
       cursor: pointer;
-      transition: background 0.2s ease;
-    }
-
-    .btn-duplikat:hover {
-      background: #ebe2e2;
     }
 
     .btn-hapus {
@@ -206,7 +210,7 @@
       border: 1px solid #f5d0d0;
       padding: 5px 10px;
       border-radius: 6px;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 600;
       cursor: pointer;
     }
@@ -216,18 +220,12 @@
       background: var(--primary-soft);
       color: var(--primary);
       border: 1.5px dashed #b8a6a6;
-      padding: 12px;
+      padding: 11px;
       border-radius: 8px;
       font-size: 13px;
       font-weight: 600;
       cursor: pointer;
-      margin-bottom: 14px;
-      transition: all 0.2s ease;
-    }
-
-    .btn-tambah:hover {
-      background: #efe8e8;
-      border-color: var(--primary);
+      margin-bottom: 12px;
     }
 
     .btn-submit {
@@ -235,108 +233,235 @@
       background: var(--primary);
       color: #ffffff;
       border: none;
-      padding: 13px;
+      padding: 12px;
       border-radius: 8px;
       font-size: 14px;
       font-weight: 600;
-      letter-spacing: 0.2px;
       cursor: pointer;
-      box-shadow: 0 3px 10px rgba(99, 74, 74, 0.22);
-      transition: background 0.2s ease, transform 0.1s ease;
     }
 
-    .btn-submit:hover {
-      background: var(--primary-hover);
+    .btn-submit:disabled { background: #b5a8a8; cursor: not-allowed; }
+
+    /* LIST PANTAUAN & KLAIM */
+    .order-row {
+      border: 1px solid #e6dede;
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 10px;
+      background: #fcfafa;
+      font-size: 12px;
     }
 
-    .btn-submit:active {
-      transform: scale(0.99);
+    .order-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+      font-weight: 700;
     }
 
-    .btn-submit:disabled {
-      background: #b5a8a8;
-      box-shadow: none;
-      cursor: not-allowed;
+    .pill {
+      padding: 3px 8px;
+      border-radius: 99px;
+      font-size: 10px;
+      font-weight: 700;
     }
 
-    #status, #loginStatus {
-      margin-top: 14px;
-      text-align: center;
-      font-size: 13px;
-      font-weight: 600;
-    }
+    .pill-ok { background: #dcfce7; color: #166534; }
+    .pill-wait { background: #fef3c7; color: #92400e; }
 
-    @media (max-width: 480px) {
-      .row-2 { grid-template-columns: 1fr; gap: 0; }
-      body { padding: 10px; }
-      .container { padding: 18px 16px; }
+    .msg-box { margin-top: 12px; text-align: center; font-size: 13px; font-weight: 600; }
+
+    @media (max-width: 520px) {
+      .row-2, .stats-grid { grid-template-columns: 1fr; }
+      body { padding: 8px; }
+      .container { padding: 14px; }
     }
   </style>
 </head>
 <body>
 
-<!-- HALAMAN LOGIN MEMBER -->
+<!-- HALAMAN LOGIN -->
 <div class="login-box" id="login-screen">
-  <h2>Login Member CBKH</h2>
-  <p class="subtitle">Masukkan Username dan Password resmi Anda untuk mengakses formulir CO.</p>
-  
+  <h2>Portal Member CBKH</h2>
+  <p class="subtitle">Masuk menggunakan Username dan Password resmi tim CBKH.</p>
   <div class="form-group">
     <label>Username <span class="req">*</span></label>
     <input type="text" id="loginUser" placeholder="Masukkan username..." autocomplete="username">
   </div>
-  
   <div class="form-group">
     <label>Password <span class="req">*</span></label>
     <input type="password" id="loginPass" placeholder="Masukkan password..." autocomplete="current-password">
   </div>
-
   <button type="button" class="btn-submit" id="btnLogin">Masuk</button>
-  <div id="loginStatus"></div>
+  <div id="loginStatus" class="msg-box"></div>
 </div>
 
-<!-- HALAMAN FORMULIR UTAMA (TERSEMBUNYI SEBELUM LOGIN) -->
-<div class="container" id="form-screen" style="display:none;">
+<!-- PORTAL UTAMA -->
+<div class="container" id="app-screen" style="display:none;">
   <div class="top-bar">
     <div>
-      <h2>Laporan Input CO - CBKH</h2>
-      <p>Identitas otomatis terkunci sesuai akun member.</p>
+      <h2>Portal CBKH <span class="badge-role" id="roleBadge">MEMBER</span></h2>
+      <div style="font-size:12px; color:var(--text-muted);" id="welcomeText">Halo, Member</div>
     </div>
-    <button type="button" class="btn-logout" id="btnLogout">Keluar</button>
-  </div>
-  
-  <div class="section-title">1. Data Member</div>
-  <div class="row-2">
-    <div class="form-group">
-      <label>Nama Asli / Nama DANA</label>
-      <input type="text" id="namaAsli" readonly>
-    </div>
-    <div class="form-group">
-      <label>Nomor DANA</label>
-      <input type="tel" id="noDana" readonly>
+    <div style="display:flex; gap:6px;">
+      <button type="button" class="btn-small" id="btnRefresh">Refresh</button>
+      <button type="button" class="btn-logout" id="btnLogout">Keluar</button>
     </div>
   </div>
 
-  <div class="section-title" style="margin-top: 18px;">2. Daftar Pesanan</div>
-  <div id="items-container"></div>
+  <!-- MENU MEMBER -->
+  <div class="nav-tabs" id="memberNav">
+    <button type="button" class="nav-btn active" data-tab="tab-dashboard">Dashboard</button>
+    <button type="button" class="nav-btn" data-tab="tab-input">Input Barang</button>
+    <button type="button" class="nav-btn" data-tab="tab-pantauan">Pantauan Barang</button>
+    <button type="button" class="nav-btn" data-tab="tab-klaim">Klaim Fee</button>
+    <button type="button" class="nav-btn" data-tab="tab-profil">Profil & DANA</button>
+  </div>
 
-  <button type="button" class="btn-tambah" id="btnTambah">+ Tambah Pesanan Baru (Kosong)</button>
-  <button type="button" class="btn-submit" id="btnSubmit">Kirim Semua Data CO</button>
-  <div id="status"></div>
+  <!-- MENU ADMIN -->
+  <div class="nav-tabs" id="adminNav" style="display:none;">
+    <button type="button" class="nav-btn active" data-tab="tab-admin-orders">Semua Pesanan Tim</button>
+    <button type="button" class="nav-btn" data-tab="tab-admin-klaim">Antrean Klaim Fee</button>
+  </div>
+
+  <!-- 1. TAB DASHBOARD MEMBER -->
+  <div class="tab-content" id="tab-dashboard">
+    <div class="stats-grid">
+      <div class="stat-card highlight">
+        <div class="stat-label">Saldo Siap Klaim (Diterima)</div>
+        <div class="stat-val" id="statSiapKlaim">Rp0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total Komisi Terkumpul</div>
+        <div class="stat-val" id="statTotalKomisi">Rp0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Komisi Sudah Cair</div>
+        <div class="stat-val" id="statSudahCair">Rp0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total Pesanan Diinput</div>
+        <div class="stat-val" id="statTotalOrder">0</div>
+      </div>
+    </div>
+    <div style="background:#fdfaf7; border:1px solid #e6dede; padding:12px; border-radius:8px; font-size:12px; color:#5c4d4d;">
+      <strong>Aturan Pencairan CBKH:</strong><br>
+      1. Komisi hanya masuk ke <b>Saldo Siap Klaim</b> apabila status pengiriman sudah <b>BARANG DITERIMA</b> dan komisi telah diverifikasi Admin.<br>
+      2. Pencairan fee dikirim khusus ke nomor <b>DANA</b> yang terdaftar di menu Profil.
+    </div>
+  </div>
+
+  <!-- 2. TAB INPUT BARANG -->
+  <div class="tab-content" id="tab-input" style="display:none;">
+    <div class="section-title">Identitas Terkunci</div>
+    <div class="row-2">
+      <div class="form-group">
+        <label>Nama Asli / Nama DANA</label>
+        <input type="text" id="namaAsli" readonly>
+      </div>
+      <div class="form-group">
+        <label>Nomor DANA Pencairan</label>
+        <input type="tel" id="noDana" readonly>
+      </div>
+    </div>
+    <div class="section-title" style="margin-top:12px;">Daftar Pesanan CO</div>
+    <div id="items-container"></div>
+    <button type="button" class="btn-tambah" id="btnTambah">+ Tambah Pesanan Baru</button>
+    <button type="button" class="btn-submit" id="btnSubmit">Kirim Semua Data CO</button>
+    <div id="status" class="msg-box"></div>
+  </div>
+
+  <!-- 3. TAB PANTAUAN BARANG MEMBER -->
+  <div class="tab-content" id="tab-pantauan" style="display:none;">
+    <div class="form-group">
+      <select id="filterStatusMember">
+        <option value="ALL">Semua Status Pengiriman</option>
+        <option value="BARANG DITERIMA">BARANG DITERIMA</option>
+        <option value="DALAM PENGIRIMAN">DALAM PENGIRIMAN</option>
+        <option value="DIKEMAS">DIKEMAS</option>
+      </select>
+    </div>
+    <div id="listPantauanMember">Memuat data pesanan...</div>
+  </div>
+
+  <!-- 4. TAB KLAIM FEE MEMBER -->
+  <div class="tab-content" id="tab-klaim" style="display:none;">
+    <div class="stat-card highlight" style="margin-bottom:14px;">
+      <div class="stat-label">Saldo Siap Klaim (Status: Barang Diterima)</div>
+      <div class="stat-val" id="klaimSaldoView">Rp0</div>
+      <div style="font-size:11px; margin-top:4px;" id="klaimPendingInfo"></div>
+    </div>
+    <div class="form-group">
+      <label>Tujuan Pencairan DANA</label>
+      <input type="text" id="klaimTujuanDana" readonly>
+    </div>
+    <div class="form-group">
+      <label>Nominal Pengajuan Klaim (Rp) <span class="req">*</span></label>
+      <input type="number" id="inputNominalKlaim" placeholder="Masukkan nominal yang ingin dicairkan">
+    </div>
+    <button type="button" class="btn-submit" id="btnAjukanKlaim">Ajukan Klaim Fee Sekarang</button>
+    <div id="klaimStatusMsg" class="msg-box"></div>
+
+    <div class="section-title" style="margin-top:20px;">Riwayat Pengajuan Klaim Anda</div>
+    <div id="listRiwayatKlaim"></div>
+  </div>
+
+  <!-- 5. TAB PROFIL MEMBER -->
+  <div class="tab-content" id="tab-profil" style="display:none;">
+    <div class="form-group">
+      <label>Nama Lengkap (Terkunci)</label>
+      <input type="text" id="profNama" readonly>
+    </div>
+    <div class="form-group">
+      <label>Username Login</label>
+      <input type="text" id="profUser" readonly>
+    </div>
+    <div class="form-group">
+      <label>Nomor DANA Pencairan (Wajib DANA)</label>
+      <input type="tel" id="profDana" placeholder="Contoh: 081234567890">
+    </div>
+    <div class="form-group">
+      <label>Password Baru (Kosongkan jika tidak ingin mengganti)</label>
+      <input type="password" id="profPassBaru" placeholder="Isi password baru...">
+    </div>
+    <button type="button" class="btn-submit" id="btnSimpanProfil">Simpan Perubahan Profil</button>
+    <div id="profilStatusMsg" class="msg-box"></div>
+  </div>
+
+  <!-- ADMIN 1: SEMUA PESANAN TIM -->
+  <div class="tab-content" id="tab-admin-orders" style="display:none;">
+    <div class="row-2" style="margin-bottom:10px;">
+      <input type="text" id="adminCariNama" placeholder="Cari nama member / produk...">
+      <select id="adminFilterStatus">
+        <option value="ALL">Semua Status</option>
+        <option value="BARANG DITERIMA">BARANG DITERIMA</option>
+        <option value="DALAM PENGIRIMAN">DALAM PENGIRIMAN</option>
+        <option value="DIKEMAS">DIKEMAS</option>
+      </select>
+    </div>
+    <div id="listAdminOrders">Memuat semua pesanan...</div>
+  </div>
+
+  <!-- ADMIN 2: ANTREAN KLAIM FEE -->
+  <div class="tab-content" id="tab-admin-klaim" style="display:none;">
+    <div id="listAdminKlaim">Memuat antrean klaim...</div>
+  </div>
 </div>
 
+<!-- TEMPLATE KARTU INPUT BARANG -->
 <template id="card-template">
   <div class="item-card">
     <div class="item-header">
       <span class="card-title">Pesanan #1</span>
-      <div class="card-actions">
+      <div>
         <button type="button" class="btn-duplikat">Duplikat</button>
         <button type="button" class="btn-hapus">Hapus</button>
       </div>
     </div>
-
     <div class="row-2">
       <div class="form-group">
-        <label>APK yang Digunakan CO <span class="req">*</span></label>
+        <label>APK CO <span class="req">*</span></label>
         <select class="apk">
           <option value="LAZADA">LAZADA</option>
           <option value="TIKTOK">TIKTOK</option>
@@ -346,50 +471,45 @@
       </div>
       <div class="form-group">
         <label>Nama Penerima (di APK) <span class="req">*</span></label>
-        <input type="text" class="namaPenerima" placeholder="Nama akun/penerima" required>
+        <input type="text" class="namaPenerima" required>
       </div>
     </div>
-
     <div class="row-2">
       <div class="form-group">
-        <label>Nama Produk / Varian <span class="req">*</span></label>
+        <label>Nama Produk <span class="req">*</span></label>
         <select class="produkSelect"></select>
-        <input type="text" class="produkManual manual-input" placeholder="Ketik nama produk manual...">
+        <input type="text" class="produkManual manual-input" placeholder="Ketik produk manual...">
       </div>
       <div class="form-group">
-        <label>Jumlah / Quantity CO <span class="req">*</span></label>
+        <label>Quantity <span class="req">*</span></label>
         <input type="number" class="qty" value="1" min="1" required>
       </div>
     </div>
-
     <div class="form-group">
       <label>Alamat Pesanan <span class="req">*</span></label>
       <select class="alamatSelect"></select>
-      <input type="text" class="alamatManual manual-input" placeholder="Ketik alamat pesanan manual...">
+      <input type="text" class="alamatManual manual-input" placeholder="Ketik alamat manual...">
     </div>
-
     <div class="row-2">
       <div class="form-group">
         <label>Harga Didapat Saat CO <span class="req">*</span></label>
-        <input type="number" class="hargaCo" placeholder="Angka saja, cth: 278152" required>
+        <input type="number" class="hargaCo" placeholder="Angka saja" required>
       </div>
       <div class="form-group">
-        <label>Harga Max (Patokan Admin)</label>
-        <input type="number" class="hargaMax" placeholder="Angka saja, cth: 279000">
+        <label>Harga Max (Admin)</label>
+        <input type="number" class="hargaMax" placeholder="Angka saja">
       </div>
     </div>
-
     <div class="row-2">
       <div class="form-group">
         <label>Nomer ID Pesanan <span class="req">*</span></label>
-        <input type="text" class="noPesanan" placeholder="Tempel ID pesanan" required>
+        <input type="text" class="noPesanan" required>
       </div>
       <div class="form-group">
-        <label>Nomer Resi Pesanan</label>
-        <input type="text" class="noResi" placeholder="Isi jika sudah keluar resi">
+        <label>Nomer Resi</label>
+        <input type="text" class="noResi">
       </div>
     </div>
-
     <div class="row-2">
       <div class="form-group">
         <label>Keterangan Pengiriman <span class="req">*</span></label>
@@ -401,10 +521,9 @@
       </div>
       <div class="form-group">
         <label>Nama Kurir</label>
-        <input type="text" class="namaKurir" placeholder="Wajib diisi jika ada">
+        <input type="text" class="namaKurir">
       </div>
     </div>
-
     <div class="row-2">
       <div class="form-group">
         <label>Tanggal Order <span class="req">*</span></label>
@@ -415,9 +534,8 @@
         <input type="date" class="tglDiterima">
       </div>
     </div>
-
     <div class="form-group" style="margin-bottom:0;">
-      <label>Screenshot Pesanan (Kelihatan alamat, nopes, resi, harga COD) <span class="req">*</span></label>
+      <label>Screenshot Pesanan <span class="req">*</span></label>
       <input type="file" class="ssFile" accept="image/*" required>
     </div>
   </div>
@@ -425,40 +543,50 @@
 
 <script>
   const API_URL = 'https://script.google.com/macros/s/AKfycbx1L8GlgdZ5K_4byjv2kKif5cWX7hPO3jn3VPcWE5O2uDg1S-2rAuPBDp--EeFLpsoJhg/exec';
-  let currentUser = { username: '', password: '' };
+  let currentUser = null;
+  let cachedData = { orders: [], klaimList: [], ringkasan: {} };
+  let masterData = { produk: [], alamat: [] };
 
-  let masterData = {
-    produk: [
-      "SWEETY VARIAN XL42", "SWEETY VARIAN L54", "SGM 1+ MADU", "SGM 1+ VANILA",
-      "Vidoran 1+ 900", "Merries XL38", "Merries L42", "Merries M48",
-      "Xiaomi Google TV A 32 2026", "4/64 Infinix Smart 20", "4/128 Infinix Smart 20",
-      "4/256 Infinix Smart 20", "6/128 Infinix Smart 20E", "4/128 Infinix Hot 70",
-      "6/128 Infinix Hot 70", "6/256 Infinix Hot 70", "8/128 Infinix Hot 70",
-      "6/128 Itel A300", "3/32 Itel A100c", "4/128 Poco C71", "4/128 Poco C81 Pro",
-      "6/128 Poco C95 Pro", "8/256 Poco C95 Pro", "4/64 Realme Note 80",
-      "4/128 Realme Note 80", "4/64 Realme P4 Lite", "4/128 Realme P4X",
-      "4/64 Samsung A07", "4/128 Samsung A07", "8/128 Samsung A17",
-      "4/64 Tecno Spark Go 3", "4/64 Vivo Y03t", "4/128 Vivo Y03t",
-      "4/64 Vivo Y19s Pro", "4/128 Vivo Y19s Pro"
-    ],
-    alamat: [
-      "Blok MA", "BLOK ASOKA", "BLOK OGI", "GADING KIRANA",
-      "Glodok City Cibinong Elektronik", "Duta suara elektronik",
-      "Wahyu Beringin", "MLATI SA"
-    ]
-  };
+  const formatRp = (n) => 'Rp' + Number(n || 0).toLocaleString('id-ID');
 
-  function bukaFormulir(user, pass, namaAsli, noDana) {
-    currentUser = { username: user, password: pass };
-    document.getElementById('namaAsli').value = namaAsli;
-    document.getElementById('noDana').value = noDana;
+  function switchTab(tabId) {
+    document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.tab === tabId);
+    });
+    const target = document.getElementById(tabId);
+    if (target) target.style.display = 'block';
+  }
+
+  document.querySelectorAll('.nav-btn').forEach(btn => {
+    btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+  });
+
+  function masukAplikasi(userObj) {
+    currentUser = userObj;
     document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('form-screen').style.display = 'block';
-    
-    if (document.querySelectorAll('.item-card').length === 0) {
-      tambahBaris();
+    document.getElementById('app-screen').style.display = 'block';
+    document.getElementById('roleBadge').innerText = userObj.role;
+    document.getElementById('welcomeText').innerText = 'Halo, ' + userObj.namaAsli;
+
+    if (userObj.role === 'ADMIN') {
+      document.getElementById('memberNav').style.display = 'none';
+      document.getElementById('adminNav').style.display = 'flex';
+      switchTab('tab-admin-orders');
+    } else {
+      document.getElementById('memberNav').style.display = 'flex';
+      document.getElementById('adminNav').style.display = 'none';
+      document.getElementById('namaAsli').value = userObj.namaAsli;
+      document.getElementById('noDana').value = userObj.noDana;
+      document.getElementById('klaimTujuanDana').value = 'DANA - ' + userObj.noDana;
+      document.getElementById('profNama').value = userObj.namaAsli;
+      document.getElementById('profUser').value = userObj.username;
+      document.getElementById('profDana').value = userObj.noDana;
+      if (document.querySelectorAll('.item-card').length === 0) tambahBaris();
+      switchTab('tab-dashboard');
+      muatMasterData();
     }
-    muatMasterData();
+    muatDataPortal();
   }
 
   async function prosesLogin() {
@@ -478,22 +606,23 @@
     statusEl.innerText = '';
 
     try {
-      const response = await fetch(API_URL, {
+      const res = await fetch(API_URL, {
         method: 'POST',
         redirect: 'follow',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({ action: 'login', username: user, password: pass })
-      });
-      const res = await response.json();
+      }).then(r => r.json());
 
       if (res.status === 'sukses') {
-        localStorage.setItem('cbkh_auth', JSON.stringify({
+        const authObj = {
           username: user,
           password: pass,
           namaAsli: res.namaAsli,
-          noDana: res.noDana
-        }));
-        bukaFormulir(user, pass, res.namaAsli, res.noDana);
+          noDana: res.noDana,
+          role: res.role || 'MEMBER'
+        };
+        localStorage.setItem('cbkh_auth', JSON.stringify(authObj));
+        masukAplikasi(authObj);
       } else {
         statusEl.style.color = '#dc2626';
         statusEl.innerText = res.pesan;
@@ -507,73 +636,286 @@
     }
   }
 
-  function logoutMember() {
-    localStorage.removeItem('cbkh_auth');
-    currentUser = { username: '', password: '' };
-    document.getElementById('loginPass').value = '';
-    document.getElementById('form-screen').style.display = 'none';
-    document.getElementById('login-screen').style.display = 'block';
+  async function muatDataPortal() {
+    if (!currentUser) return;
+    try {
+      const res = await fetch(API_URL, {
+        method: 'POST',
+        redirect: 'follow',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+          action: 'getDashboard',
+          username: currentUser.username,
+          password: currentUser.password
+        })
+      }).then(r => r.json());
+
+      if (res.status === 'sukses') {
+        cachedData = res;
+        if (currentUser.role === 'ADMIN') {
+          renderAdminOrders();
+          renderAdminKlaim();
+        } else {
+          renderMemberDashboard();
+          renderMemberPantauan();
+          renderMemberKlaim();
+        }
+      }
+    } catch (e) {}
   }
 
-  function isiOpsiDropdown(selectEl, daftarOpsi, labelKosong) {
-    const nilaiSebelumnya = selectEl.value;
-    selectEl.innerHTML = '';
-    const optDefault = document.createElement('option');
-    optDefault.value = '';
-    optDefault.text = '-- Pilih ' + labelKosong + ' --';
-    selectEl.appendChild(optDefault);
+  function renderMemberDashboard() {
+    const r = cachedData.ringkasan;
+    document.getElementById('statSiapKlaim').innerText = formatRp(r.saldoSiapKlaim);
+    document.getElementById('statTotalKomisi').innerText = formatRp(r.totalKomisiSemua);
+    document.getElementById('statSudahCair').innerText = formatRp(r.totalCair);
+    document.getElementById('statTotalOrder').innerText = r.totalOrder + ' Pesanan';
+  }
 
-    for (let i = 0; i < daftarOpsi.length; i++) {
-      const opt = document.createElement('option');
-      opt.value = daftarOpsi[i];
-      opt.text = daftarOpsi[i];
-      selectEl.appendChild(opt);
+  function renderMemberPantauan() {
+    const filter = document.getElementById('filterStatusMember').value;
+    const listEl = document.getElementById('listPantauanMember');
+    const filtered = cachedData.orders.filter(o => filter === 'ALL' || o.ketPengiriman.toUpperCase() === filter);
+
+    if (filtered.length === 0) {
+      listEl.innerHTML = '<div style="text-align:center; color:#786868; padding:20px;">Belum ada data pesanan.</div>';
+      return;
     }
 
-    const optManual = document.createElement('option');
-    optManual.value = '__MANUAL__';
-    optManual.text = '+ Ketik Manual (Lainnya)';
-    selectEl.appendChild(optManual);
+    listEl.innerHTML = filtered.map(o => {
+      const isOk = o.ketPengiriman.toUpperCase() === 'BARANG DITERIMA';
+      return `
+        <div class="order-row">
+          <div class="order-top">
+            <span>${o.namaProduk} (${o.qty}x)</span>
+            <span class="pill ${isOk ? 'pill-ok' : 'pill-wait'}">${o.ketPengiriman}</span>
+          </div>
+          <div>Penerima: <b>${o.namaPenerima}</b> | APK: ${o.apk}</div>
+          <div>ID: ${o.noPesanan} | Resi: ${o.noResi || '-'}</div>
+          <div style="margin-top:4px; color:var(--primary); font-weight:700;">Komisi: ${o.komisi > 0 ? formatRp(o.komisi) : 'Menunggu Verifikasi Admin'}</div>
+        </div>
+      `;
+    }).join('');
+  }
 
-    if (nilaiSebelumnya) selectEl.value = nilaiSebelumnya;
+  function renderMemberKlaim() {
+    const r = cachedData.ringkasan;
+    document.getElementById('klaimSaldoView').innerText = formatRp(r.saldoSiapKlaim);
+    document.getElementById('inputNominalKlaim').value = r.saldoSiapKlaim > 0 ? r.saldoSiapKlaim : '';
+    document.getElementById('klaimPendingInfo').innerText = r.totalPending > 0
+      ? 'Sedang diproses Admin: ' + formatRp(r.totalPending)
+      : 'Tidak ada antrean klaim pending.';
+
+    const listEl = document.getElementById('listRiwayatKlaim');
+    if (cachedData.klaimList.length === 0) {
+      listEl.innerHTML = '<div style="font-size:12px; color:#786868;">Belum ada riwayat klaim.</div>';
+      return;
+    }
+
+    listEl.innerHTML = cachedData.klaimList.map(k => `
+      <div class="order-row">
+        <div class="order-top">
+          <span>${formatRp(k.nominal)} → DANA ${k.noDana}</span>
+          <span class="pill ${k.status === 'DONE' ? 'pill-ok' : 'pill-wait'}">${k.status}</span>
+        </div>
+        <div style="color:#786868;">Diajukan: ${k.timestamp}</div>
+      </div>
+    `).join('');
+  }
+
+  function renderAdminOrders() {
+    const q = document.getElementById('adminCariNama').value.toLowerCase();
+    const st = document.getElementById('adminFilterStatus').value;
+    const listEl = document.getElementById('listAdminOrders');
+
+    const filtered = cachedData.orders.filter(o => {
+      const matchText = o.namaAsli.toLowerCase().includes(q) || o.namaProduk.toLowerCase().includes(q) || o.noPesanan.toLowerCase().includes(q);
+      const matchSt = st === 'ALL' || o.ketPengiriman.toUpperCase() === st;
+      return matchText && matchSt;
+    });
+
+    if (filtered.length === 0) {
+      listEl.innerHTML = '<div style="text-align:center; padding:20px;">Tidak ada data pesanan.</div>';
+      return;
+    }
+
+    listEl.innerHTML = filtered.map(o => `
+      <div class="order-row">
+        <div class="order-top">
+          <span>${o.namaAsli} • ${o.namaProduk}</span>
+          ${o.ssUrl ? `<a href="${o.ssUrl}" target="_blank" style="color:var(--primary);">Lihat SS</a>` : ''}
+        </div>
+        <div>Penerima: ${o.namaPenerima} | ID: ${o.noPesanan} | Resi: ${o.noResi || '-'}</div>
+        <div>Harga CO: ${formatRp(o.hargaCo)} | DANA: ${o.noDana}</div>
+        <div class="row-2" style="margin-top:8px;">
+          <select id="admSt_${o.rowNumber}">
+            <option value="BARANG DITERIMA" ${o.ketPengiriman === 'BARANG DITERIMA' ? 'selected' : ''}>BARANG DITERIMA</option>
+            <option value="DALAM PENGIRIMAN" ${o.ketPengiriman === 'DALAM PENGIRIMAN' ? 'selected' : ''}>DALAM PENGIRIMAN</option>
+            <option value="DIKEMAS" ${o.ketPengiriman === 'DIKEMAS' ? 'selected' : ''}>DIKEMAS</option>
+          </select>
+          <div style="display:flex; gap:6px;">
+            <input type="number" id="admKom_${o.rowNumber}" value="${o.komisi || ''}" placeholder="Komisi Rp">
+            <button type="button" class="btn-small" onclick="simpanEditAdmin(${o.rowNumber})">Simpan</button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function renderAdminKlaim() {
+    const listEl = document.getElementById('listAdminKlaim');
+    if (cachedData.klaimList.length === 0) {
+      listEl.innerHTML = '<div style="text-align:center; padding:20px;">Belum ada pengajuan klaim.</div>';
+      return;
+    }
+
+    listEl.innerHTML = cachedData.klaimList.map(k => `
+      <div class="order-row">
+        <div class="order-top">
+          <span>${k.namaMember} • ${formatRp(k.nominal)}</span>
+          <span class="pill ${k.status === 'DONE' ? 'pill-ok' : 'pill-wait'}">${k.status}</span>
+        </div>
+        <div>Transfer DANA ke: <b>${k.noDana}</b></div>
+        <div style="margin-top:6px; display:flex; justify-content:space-between; align-items:center;">
+          <span style="color:#786868;">${k.timestamp}</span>
+          ${k.status === 'PENDING' ? `<button type="button" class="btn-small" onclick="approveKlaimAdmin(${k.rowNumber})">Tandai Sudah Cair (DONE)</button>` : ''}
+        </div>
+      </div>
+    `).join('');
+  }
+
+  window.simpanEditAdmin = async function(rowNumber) {
+    const ket = document.getElementById('admSt_' + rowNumber).value;
+    const kom = document.getElementById('admKom_' + rowNumber).value;
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      redirect: 'follow',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        action: 'adminUpdateOrder',
+        username: currentUser.username,
+        password: currentUser.password,
+        rowNumber: rowNumber,
+        ketPengiriman: ket,
+        komisi: kom
+      })
+    }).then(r => r.json());
+    alert(res.pesan);
+    muatDataPortal();
+  };
+
+  window.approveKlaimAdmin = async function(rowNumber) {
+    if (!confirm('Tandai klaim ini sudah ditransfer ke DANA member?')) return;
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      redirect: 'follow',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        action: 'adminApproveKlaim',
+        username: currentUser.username,
+        password: currentUser.password,
+        rowNumber: rowNumber
+      })
+    }).then(r => r.json());
+    alert(res.pesan);
+    muatDataPortal();
+  };
+
+  document.getElementById('btnAjukanKlaim').addEventListener('click', async () => {
+    const nom = Number(document.getElementById('inputNominalKlaim').value);
+    const msg = document.getElementById('klaimStatusMsg');
+    const btn = document.getElementById('btnAjukanKlaim');
+    btn.disabled = true;
+    msg.innerText = 'Mengirim pengajuan...';
+
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      redirect: 'follow',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        action: 'klaimFee',
+        username: currentUser.username,
+        password: currentUser.password,
+        nominal: nom
+      })
+    }).then(r => r.json());
+
+    msg.style.color = res.status === 'sukses' ? '#16a34a' : '#dc2626';
+    msg.innerText = res.pesan;
+    btn.disabled = false;
+    if (res.status === 'sukses') muatDataPortal();
+  });
+
+  document.getElementById('btnSimpanProfil').addEventListener('click', async () => {
+    const danaBaru = document.getElementById('profDana').value.trim();
+    const passBaru = document.getElementById('profPassBaru').value.trim();
+    const msg = document.getElementById('profilStatusMsg');
+
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      redirect: 'follow',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        action: 'updateProfil',
+        username: currentUser.username,
+        password: currentUser.password,
+        noDanaBaru: danaBaru,
+        passBaru: passBaru
+      })
+    }).then(r => r.json());
+
+    msg.style.color = res.status === 'sukses' ? '#16a34a' : '#dc2626';
+    msg.innerText = res.pesan;
+    if (res.status === 'sukses') {
+      currentUser.noDana = res.noDana;
+      if (res.password) currentUser.password = res.password;
+      localStorage.setItem('cbkh_auth', JSON.stringify(currentUser));
+      document.getElementById('noDana').value = res.noDana;
+      document.getElementById('klaimTujuanDana').value = 'DANA - ' + res.noDana;
+      document.getElementById('profPassBaru').value = '';
+    }
+  });
+
+  function isiOpsiDropdown(selectEl, daftarOpsi, labelKosong) {
+    const valLama = selectEl.value;
+    selectEl.innerHTML = `<option value="">-- Pilih ${labelKosong} --</option>`;
+    daftarOpsi.forEach(item => {
+      const opt = document.createElement('option');
+      opt.value = item;
+      opt.text = item;
+      selectEl.appendChild(opt);
+    });
+    const optM = document.createElement('option');
+    optM.value = '__MANUAL__';
+    optM.text = '+ Ketik Manual (Lainnya)';
+    selectEl.appendChild(optM);
+    if (valLama) selectEl.value = valLama;
   }
 
   function tambahBaris(dataSalinan) {
     const container = document.getElementById('items-container');
-    const template = document.getElementById('card-template');
-    const clone = template.content.cloneNode(true);
+    const clone = document.getElementById('card-template').content.cloneNode(true);
     const card = clone.querySelector('.item-card');
 
-    const produkSelect = card.querySelector('.produkSelect');
-    const produkManual = card.querySelector('.produkManual');
-    const alamatSelect = card.querySelector('.alamatSelect');
-    const alamatManual = card.querySelector('.alamatManual');
+    const pSel = card.querySelector('.produkSelect');
+    const pMan = card.querySelector('.produkManual');
+    const aSel = card.querySelector('.alamatSelect');
+    const aMan = card.querySelector('.alamatManual');
 
-    isiOpsiDropdown(produkSelect, masterData.produk, 'Produk / Varian');
-    isiOpsiDropdown(alamatSelect, masterData.alamat, 'Alamat');
+    isiOpsiDropdown(pSel, masterData.produk, 'Produk');
+    isiOpsiDropdown(aSel, masterData.alamat, 'Alamat');
 
-    produkSelect.addEventListener('change', function() {
-      produkManual.style.display = (this.value === '__MANUAL__') ? 'block' : 'none';
-    });
-
-    alamatSelect.addEventListener('change', function() {
-      alamatManual.style.display = (this.value === '__MANUAL__') ? 'block' : 'none';
-    });
+    pSel.addEventListener('change', () => pMan.style.display = pSel.value === '__MANUAL__' ? 'block' : 'none');
+    aSel.addEventListener('change', () => aMan.style.display = aSel.value === '__MANUAL__' ? 'block' : 'none');
 
     if (dataSalinan) {
       card.querySelector('.apk').value = dataSalinan.apk;
       card.querySelector('.namaPenerima').value = dataSalinan.namaPenerima;
-      produkSelect.value = dataSalinan.produkSelectVal;
-      if (dataSalinan.produkSelectVal === '__MANUAL__') {
-        produkManual.style.display = 'block';
-        produkManual.value = dataSalinan.produkManualVal;
-      }
+      pSel.value = dataSalinan.pSel;
+      if (dataSalinan.pSel === '__MANUAL__') { pMan.style.display = 'block'; pMan.value = dataSalinan.pMan; }
       card.querySelector('.qty').value = dataSalinan.qty;
-      alamatSelect.value = dataSalinan.alamatSelectVal;
-      if (dataSalinan.alamatSelectVal === '__MANUAL__') {
-        alamatManual.style.display = 'block';
-        alamatManual.value = dataSalinan.alamatManualVal;
-      }
+      aSel.value = dataSalinan.aSel;
+      if (dataSalinan.aSel === '__MANUAL__') { aMan.style.display = 'block'; aMan.value = dataSalinan.aMan; }
       card.querySelector('.hargaCo').value = dataSalinan.hargaCo;
       card.querySelector('.hargaMax').value = dataSalinan.hargaMax;
       card.querySelector('.ketPengiriman').value = dataSalinan.ketPengiriman;
@@ -582,15 +924,13 @@
       card.querySelector('.tglDiterima').value = dataSalinan.tglDiterima;
     }
 
-    card.querySelector('.btn-duplikat').addEventListener('click', function() {
+    card.querySelector('.btn-duplikat').addEventListener('click', () => {
       tambahBaris({
         apk: card.querySelector('.apk').value,
         namaPenerima: card.querySelector('.namaPenerima').value,
-        produkSelectVal: produkSelect.value,
-        produkManualVal: produkManual.value,
+        pSel: pSel.value, pMan: pMan.value,
         qty: card.querySelector('.qty').value,
-        alamatSelectVal: alamatSelect.value,
-        alamatManualVal: alamatManual.value,
+        aSel: aSel.value, aMan: aMan.value,
         hargaCo: card.querySelector('.hargaCo').value,
         hargaMax: card.querySelector('.hargaMax').value,
         ketPengiriman: card.querySelector('.ketPengiriman').value,
@@ -600,82 +940,70 @@
       });
     });
 
-    card.querySelector('.btn-hapus').addEventListener('click', function() {
-      card.remove();
-      perbaruiNomorKartu();
-    });
-
+    card.querySelector('.btn-hapus').addEventListener('click', () => { card.remove(); perbaruiNomorKartu(); });
     container.appendChild(card);
     perbaruiNomorKartu();
   }
 
   function perbaruiNomorKartu() {
     const cards = document.querySelectorAll('.item-card');
-    for (let i = 0; i < cards.length; i++) {
-      cards[i].querySelector('.card-title').innerText = 'Pesanan #' + (i + 1);
-      cards[i].querySelector('.btn-hapus').style.display = (cards.length > 1) ? 'inline-block' : 'none';
-    }
+    cards.forEach((c, idx) => {
+      c.querySelector('.card-title').innerText = 'Pesanan #' + (idx + 1);
+      c.querySelector('.btn-hapus').style.display = cards.length > 1 ? 'inline-block' : 'none';
+    });
   }
 
   function bacaFile(file) {
     return new Promise((resolve, reject) => {
       if (!file) return resolve({ fileData: null, fileName: null });
-      const reader = new FileReader();
-      reader.onload = () => resolve({ fileData: reader.result, fileName: file.name });
-      reader.onerror = error => reject(error);
-      reader.readAsDataURL(file);
+      const r = new FileReader();
+      r.onload = () => resolve({ fileData: r.result, fileName: file.name });
+      r.onerror = e => reject(e);
+      r.readAsDataURL(file);
     });
   }
 
-  async function prosesKirim() {
+  document.getElementById('btnSubmit').addEventListener('click', async () => {
     const cards = document.querySelectorAll('.item-card');
     const statusDiv = document.getElementById('status');
     const btn = document.getElementById('btnSubmit');
-
     btn.disabled = true;
-    btn.innerText = 'Memproses gambar & data...';
-    statusDiv.innerText = '';
+    btn.innerText = 'Menyimpan pesanan...';
 
     try {
       const items = [];
       for (let i = 0; i < cards.length; i++) {
-        const card = cards[i];
-        const apk = card.querySelector('.apk').value;
-        const namaPenerima = card.querySelector('.namaPenerima').value.trim();
-        const produkSel = card.querySelector('.produkSelect').value;
-        const namaProduk = (produkSel === '__MANUAL__') ? card.querySelector('.produkManual').value.trim() : produkSel;
-        const qty = card.querySelector('.qty').value.trim();
-        const alamatSel = card.querySelector('.alamatSelect').value;
-        const alamat = (alamatSel === '__MANUAL__') ? card.querySelector('.alamatManual').value.trim() : alamatSel;
-        const hargaCo = card.querySelector('.hargaCo').value.trim();
-        const hargaMax = card.querySelector('.hargaMax').value.trim();
-        const noPesanan = card.querySelector('.noPesanan').value.trim();
-        const noResi = card.querySelector('.noResi').value.trim();
-        const ketPengiriman = card.querySelector('.ketPengiriman').value;
-        const namaKurir = card.querySelector('.namaKurir').value.trim();
-        const tglOrder = card.querySelector('.tglOrder').value;
-        const tglDiterima = card.querySelector('.tglDiterima').value;
-        const fileInput = card.querySelector('.ssFile');
+        const c = cards[i];
+        const pSel = c.querySelector('.produkSelect').value;
+        const aSel = c.querySelector('.alamatSelect').value;
+        const namaProduk = pSel === '__MANUAL__' ? c.querySelector('.produkManual').value.trim() : pSel;
+        const alamat = aSel === '__MANUAL__' ? c.querySelector('.alamatManual').value.trim() : aSel;
+        const namaPenerima = c.querySelector('.namaPenerima').value.trim();
+        const qty = c.querySelector('.qty').value;
+        const hargaCo = c.querySelector('.hargaCo').value;
+        const noPesanan = c.querySelector('.noPesanan').value.trim();
+        const tglOrder = c.querySelector('.tglOrder').value;
+        const file = c.querySelector('.ssFile').files[0];
 
-        if (!namaPenerima || !namaProduk || !qty || !alamat || !hargaCo || !noPesanan || !tglOrder || !fileInput.files[0]) {
-          alert('Harap lengkapi semua kolom wajib (*) dan upload screenshot pada Pesanan #' + (i + 1) + '.');
+        if (!namaPenerima || !namaProduk || !alamat || !hargaCo || !noPesanan || !tglOrder || !file) {
+          alert('Lengkapi semua kolom wajib (*) & screenshot di Pesanan #' + (i + 1));
           btn.disabled = false;
           btn.innerText = 'Kirim Semua Data CO';
           return;
         }
-
-        const fileObj = await bacaFile(fileInput.files[0]);
+        const fObj = await bacaFile(file);
         items.push({
-          apk, namaPenerima, namaProduk, qty, alamat,
-          hargaCo, hargaMax, noPesanan, noResi,
-          ketPengiriman, namaKurir, tglOrder, tglDiterima,
-          fileData: fileObj.fileData,
-          fileName: fileObj.fileName
+          apk: c.querySelector('.apk').value, namaPenerima, namaProduk, qty, alamat,
+          hargaCo, hargaMax: c.querySelector('.hargaMax').value, noPesanan,
+          noResi: c.querySelector('.noResi').value.trim(),
+          ketPengiriman: c.querySelector('.ketPengiriman').value,
+          namaKurir: c.querySelector('.namaKurir').value.trim(),
+          tglOrder, tglDiterima: c.querySelector('.tglDiterima').value,
+          fileData: fObj.fileData, fileName: fObj.fileName
         });
       }
 
-      btn.innerText = 'Menyimpan ke Spreadsheet...';
-      const response = await fetch(API_URL, {
+      const res = await fetch(API_URL, {
         method: 'POST',
         redirect: 'follow',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -685,56 +1013,58 @@
           password: currentUser.password,
           items
         })
-      });
-      const res = await response.json();
+      }).then(r => r.json());
 
       if (res.status === 'sukses') {
         statusDiv.style.color = '#16a34a';
-        statusDiv.innerText = 'Berhasil! ' + res.jumlah + ' pesanan telah masuk ke database.';
+        statusDiv.innerText = 'Berhasil mengirim ' + res.jumlah + ' pesanan!';
         document.getElementById('items-container').innerHTML = '';
         tambahBaris();
+        muatDataPortal();
       } else {
         statusDiv.style.color = '#dc2626';
         statusDiv.innerText = 'Gagal: ' + res.pesan;
       }
     } catch (e) {
       statusDiv.style.color = '#dc2626';
-      statusDiv.innerText = 'Koneksi gagal: ' + e;
+      statusDiv.innerText = 'Error: ' + e;
     } finally {
       btn.disabled = false;
       btn.innerText = 'Kirim Semua Data CO';
     }
-  }
+  });
 
   function muatMasterData() {
     fetch(API_URL, { redirect: 'follow' })
       .then(r => r.json())
-      .then(data => {
-        if (data && data.produk && data.produk.length > 0) masterData.produk = data.produk;
-        if (data && data.alamat && data.alamat.length > 0) masterData.alamat = data.alamat;
-        document.querySelectorAll('.item-card').forEach(card => {
-          isiOpsiDropdown(card.querySelector('.produkSelect'), masterData.produk, 'Produk / Varian');
-          isiOpsiDropdown(card.querySelector('.alamatSelect'), masterData.alamat, 'Alamat');
+      .then(d => {
+        if (d.produk) masterData.produk = d.produk;
+        if (d.alamat) masterData.alamat = d.alamat;
+        document.querySelectorAll('.item-card').forEach(c => {
+          isiOpsiDropdown(c.querySelector('.produkSelect'), masterData.produk, 'Produk');
+          isiOpsiDropdown(c.querySelector('.alamatSelect'), masterData.alamat, 'Alamat');
         });
-      })
-      .catch(() => {});
+      }).catch(() => {});
   }
 
   document.getElementById('btnLogin').addEventListener('click', prosesLogin);
-  document.getElementById('btnLogout').addEventListener('click', logoutMember);
+  document.getElementById('btnRefresh').addEventListener('click', muatDataPortal);
+  document.getElementById('btnLogout').addEventListener('click', () => {
+    localStorage.removeItem('cbkh_auth');
+    location.reload();
+  });
   document.getElementById('btnTambah').addEventListener('click', () => tambahBaris());
-  document.getElementById('btnSubmit').addEventListener('click', prosesKirim);
+  document.getElementById('filterStatusMember').addEventListener('change', renderMemberPantauan);
+  document.getElementById('adminCariNama').addEventListener('input', renderAdminOrders);
+  document.getElementById('adminFilterStatus').addEventListener('change', renderAdminOrders);
 
-  const savedAuth = localStorage.getItem('cbkh_auth');
-  if (savedAuth) {
+  const saved = localStorage.getItem('cbkh_auth');
+  if (saved) {
     try {
-      const parsed = JSON.parse(savedAuth);
-      if (parsed.username && parsed.password) {
-        bukaFormulir(parsed.username, parsed.password, parsed.namaAsli, parsed.noDana);
-      }
+      const p = JSON.parse(saved);
+      if (p.username && p.password) masukAplikasi(p);
     } catch (e) {}
   }
 </script>
-
 </body>
 </html>
