@@ -13,8 +13,6 @@
       --bg-page: #f7f4f4;
       --text-main: #2b2121;
       --text-muted: #786868;
-      --success: #15803d;
-      --warning: #b45309;
     }
 
     body {
@@ -79,7 +77,6 @@
       cursor: pointer;
     }
 
-    /* NAVIGASI TAB */
     .nav-tabs {
       display: flex;
       gap: 6px;
@@ -102,12 +99,8 @@
       transition: all 0.2s;
     }
 
-    .nav-btn.active {
-      background: var(--primary);
-      color: #ffffff;
-    }
+    .nav-btn.active { background: var(--primary); color: #ffffff; }
 
-    /* GRID RINGKASAN DASHBOARD */
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -122,16 +115,10 @@
       padding: 14px;
     }
 
-    .stat-card.highlight {
-      background: var(--primary);
-      color: #ffffff;
-      border-color: var(--primary);
-    }
-
+    .stat-card.highlight { background: var(--primary); color: #ffffff; border-color: var(--primary); }
     .stat-label { font-size: 11px; opacity: 0.85; font-weight: 600; text-transform: uppercase; }
     .stat-val { font-size: 18px; font-weight: 700; margin-top: 4px; }
 
-    /* FORM & INPUT */
     .section-title {
       font-size: 12px;
       font-weight: 700;
@@ -164,13 +151,7 @@
       box-shadow: 0 0 0 3px rgba(99, 74, 74, 0.14);
     }
 
-    input[readonly] {
-      background: var(--primary-soft);
-      color: var(--primary);
-      font-weight: 600;
-      cursor: not-allowed;
-    }
-
+    input[readonly] { background: var(--primary-soft); color: var(--primary); font-weight: 600; cursor: not-allowed; }
     .manual-input { margin-top: 8px; display: none; background: #fdfaf7; border-color: #b78d65; }
 
     .item-card {
@@ -242,7 +223,6 @@
 
     .btn-submit:disabled { background: #b5a8a8; cursor: not-allowed; }
 
-    /* LIST PANTAUAN & KLAIM */
     .order-row {
       border: 1px solid #e6dede;
       border-radius: 10px;
@@ -260,15 +240,19 @@
       font-weight: 700;
     }
 
-    .pill {
-      padding: 3px 8px;
-      border-radius: 99px;
-      font-size: 10px;
-      font-weight: 700;
-    }
-
+    .pill { padding: 3px 8px; border-radius: 99px; font-size: 10px; font-weight: 700; }
     .pill-ok { background: #dcfce7; color: #166534; }
     .pill-wait { background: #fef3c7; color: #92400e; }
+
+    .edit-drawer {
+      display: none;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--primary-border);
+      background: #ffffff;
+      padding: 10px;
+      border-radius: 8px;
+    }
 
     .msg-box { margin-top: 12px; text-align: center; font-size: 13px; font-weight: 600; }
 
@@ -684,19 +668,171 @@
 
     listEl.innerHTML = filtered.map(o => {
       const isOk = o.ketPengiriman.toUpperCase() === 'BARANG DITERIMA';
+      const terkunci = o.komisi > 0;
+      const r = o.rowNumber;
+
       return `
         <div class="order-row">
           <div class="order-top">
             <span>${o.namaProduk} (${o.qty}x)</span>
             <span class="pill ${isOk ? 'pill-ok' : 'pill-wait'}">${o.ketPengiriman}</span>
           </div>
-          <div>Penerima: <b>${o.namaPenerima}</b> | APK: ${o.apk}</div>
-          <div>ID: ${o.noPesanan} | Resi: ${o.noResi || '-'}</div>
-          <div style="margin-top:4px; color:var(--primary); font-weight:700;">Komisi: ${o.komisi > 0 ? formatRp(o.komisi) : 'Menunggu Verifikasi Admin'}</div>
+          <div>Penerima: <b>${o.namaPenerima}</b> | APK: ${o.apk} | Harga CO: ${formatRp(o.hargaCo)}</div>
+          <div>ID: ${o.noPesanan} | Resi: ${o.noResi || '-'} | Alamat: ${o.alamat}</div>
+          <div style="margin-top:6px; display:flex; justify-content:space-between; align-items:center;">
+            <span style="color:var(--primary); font-weight:700;">Komisi: ${terkunci ? formatRp(o.komisi) + ' (Terkunci)' : 'Menunggu Verifikasi Admin'}</span>
+            ${!terkunci ? `
+              <div style="display:flex; gap:6px;">
+                <button type="button" class="btn-small" onclick="toggleEditMember(${r})">Edit</button>
+                <button type="button" class="btn-hapus" onclick="hapusOrderMember(${r})">Hapus</button>
+              </div>
+            ` : ''}
+          </div>
+
+          ${!terkunci ? `
+          <div class="edit-drawer" id="editBox_${r}">
+            <div class="section-title" style="margin-bottom:8px;">Edit Data Pesanan</div>
+            <div class="row-2">
+              <div class="form-group">
+                <label>APK CO</label>
+                <select id="edApk_${r}">
+                  <option value="LAZADA" ${o.apk === 'LAZADA' ? 'selected' : ''}>LAZADA</option>
+                  <option value="TIKTOK" ${o.apk === 'TIKTOK' ? 'selected' : ''}>TIKTOK</option>
+                  <option value="TOKOPEDIA" ${o.apk === 'TOKOPEDIA' ? 'selected' : ''}>TOKOPEDIA</option>
+                  <option value="SHOPEE" ${o.apk === 'SHOPEE' ? 'selected' : ''}>SHOPEE</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Nama Penerima</label>
+                <input type="text" id="edPenerima_${r}" value="${o.namaPenerima}">
+              </div>
+            </div>
+            <div class="row-2">
+              <div class="form-group">
+                <label>Nama Produk</label>
+                <input type="text" id="edProduk_${r}" value="${o.namaProduk}">
+              </div>
+              <div class="form-group">
+                <label>Quantity</label>
+                <input type="number" id="edQty_${r}" value="${o.qty}">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Alamat Pesanan</label>
+              <input type="text" id="edAlamat_${r}" value="${o.alamat}">
+            </div>
+            <div class="row-2">
+              <div class="form-group">
+                <label>Harga CO</label>
+                <input type="number" id="edHargaCo_${r}" value="${o.hargaCo}">
+              </div>
+              <div class="form-group">
+                <label>Harga Max</label>
+                <input type="number" id="edHargaMax_${r}" value="${o.hargaMax || ''}">
+              </div>
+            </div>
+            <div class="row-2">
+              <div class="form-group">
+                <label>ID Pesanan</label>
+                <input type="text" id="edNoPesanan_${r}" value="${o.noPesanan}">
+              </div>
+              <div class="form-group">
+                <label>Nomor Resi</label>
+                <input type="text" id="edNoResi_${r}" value="${o.noResi}">
+              </div>
+            </div>
+            <div class="row-2">
+              <div class="form-group">
+                <label>Status Pengiriman</label>
+                <select id="edKet_${r}">
+                  <option value="BARANG DITERIMA" ${o.ketPengiriman === 'BARANG DITERIMA' ? 'selected' : ''}>BARANG DITERIMA</option>
+                  <option value="DALAM PENGIRIMAN" ${o.ketPengiriman === 'DALAM PENGIRIMAN' ? 'selected' : ''}>DALAM PENGIRIMAN</option>
+                  <option value="DIKEMAS" ${o.ketPengiriman === 'DIKEMAS' ? 'selected' : ''}>DIKEMAS</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Nama Kurir</label>
+                <input type="text" id="edKurir_${r}" value="${o.namaKurir}">
+              </div>
+            </div>
+            <div class="row-2">
+              <div class="form-group">
+                <label>Tanggal Order (DD/MM/YYYY)</label>
+                <input type="text" id="edTglOrder_${r}" value="${o.tglOrder}">
+              </div>
+              <div class="form-group">
+                <label>Tanggal Diterima (DD/MM/YYYY)</label>
+                <input type="text" id="edTglDiterima_${r}" value="${o.tglDiterima}">
+              </div>
+            </div>
+            <div style="display:flex; gap:8px; margin-top:6px;">
+              <button type="button" class="btn-submit" style="padding:8px; font-size:12px;" onclick="simpanEditMember(${r})">Simpan Perubahan</button>
+              <button type="button" class="btn-logout" onclick="toggleEditMember(${r})">Batal</button>
+            </div>
+          </div>
+          ` : ''}
         </div>
       `;
     }).join('');
   }
+
+  window.toggleEditMember = function(rowNumber) {
+    const box = document.getElementById('editBox_' + rowNumber);
+    if (!box) return;
+    box.style.display = (box.style.display === 'block') ? 'none' : 'block';
+  };
+
+  window.simpanEditMember = async function(rowNumber) {
+    const orderData = {
+      rowNumber: rowNumber,
+      apk: document.getElementById('edApk_' + rowNumber).value,
+      namaPenerima: document.getElementById('edPenerima_' + rowNumber).value.trim(),
+      namaProduk: document.getElementById('edProduk_' + rowNumber).value.trim(),
+      qty: document.getElementById('edQty_' + rowNumber).value,
+      alamat: document.getElementById('edAlamat_' + rowNumber).value.trim(),
+      hargaCo: document.getElementById('edHargaCo_' + rowNumber).value,
+      hargaMax: document.getElementById('edHargaMax_' + rowNumber).value,
+      noPesanan: document.getElementById('edNoPesanan_' + rowNumber).value.trim(),
+      noResi: document.getElementById('edNoResi_' + rowNumber).value.trim(),
+      ketPengiriman: document.getElementById('edKet_' + rowNumber).value,
+      namaKurir: document.getElementById('edKurir_' + rowNumber).value.trim(),
+      tglOrder: document.getElementById('edTglOrder_' + rowNumber).value.trim(),
+      tglDiterima: document.getElementById('edTglDiterima_' + rowNumber).value.trim()
+    };
+
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      redirect: 'follow',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        action: 'memberEditOrder',
+        username: currentUser.username,
+        password: currentUser.password,
+        orderData: orderData
+      })
+    }).then(r => r.json());
+
+    alert(res.pesan);
+    if (res.status === 'sukses') muatDataPortal();
+  };
+
+  window.hapusOrderMember = async function(rowNumber) {
+    if (!confirm('Yakin ingin menghapus pesanan ini secara permanen?')) return;
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      redirect: 'follow',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        action: 'memberDeleteOrder',
+        username: currentUser.username,
+        password: currentUser.password,
+        rowNumber: rowNumber
+      })
+    }).then(r => r.json());
+
+    alert(res.pesan);
+    if (res.status === 'sukses') muatDataPortal();
+  };
 
   function renderMemberKlaim() {
     const r = cachedData.ringkasan;
