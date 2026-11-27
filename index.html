@@ -1089,12 +1089,30 @@
     });
   }
 
-  function bacaFile(file) {
+function bacaFile(file) {
     return new Promise((resolve, reject) => {
       if (!file) return resolve({ fileData: null, fileName: null });
       const r = new FileReader();
-      r.onload = () => resolve({ fileData: r.result, fileName: file.name });
-      r.onerror = e => reject(e);
+      r.onload = (ev) => {
+        const img = new Image();
+        img.onload = () => {
+          const maxDim = 1280;
+          let w = img.width;
+          let h = img.height;
+          if (w > maxDim || h > maxDim) {
+            if (w > h) { h = Math.round(h * maxDim / w); w = maxDim; }
+            else { w = Math.round(w * maxDim / h); h = maxDim; }
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = w;
+          canvas.height = h;
+          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+          resolve({ fileData: canvas.toDataURL('image/jpeg', 0.78), fileName: file.name });
+        };
+        img.onerror = () => resolve({ fileData: ev.target.result, fileName: file.name });
+        img.src = ev.target.result;
+      };
+      r.onerror = () => reject('Gagal membaca file gambar. Buka web lewat Chrome dan pilih ulang file screenshot dari memori HP.');
       r.readAsDataURL(file);
     });
   }
